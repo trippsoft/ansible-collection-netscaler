@@ -1,0 +1,20 @@
+---
+- name: Power off VM
+  when:
+    - (_platform.name_prefix + _platform.name) in _libvirt_info.keys()
+  community.libvirt.virt:
+    name: "{{ _platform.name_prefix }}{{ _platform.name }}"
+    state: destroyed
+
+- name: Remove VM
+  when:
+    - (_platform.name_prefix + _platform.name) in _libvirt_info.keys()
+  community.libvirt.virt:
+    name: "{{ _platform.name_prefix }}{{ _platform.name }}"
+    command: undefine
+  changed_when: true
+
+- name: Delete disk
+  ansible.builtin.file:
+    path: "/var/lib/libvirt/images/{{ _platform.name_prefix }}{{ _platform.name }}.qcow2"
+    state: absent

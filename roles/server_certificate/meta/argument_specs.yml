@@ -1,0 +1,117 @@
+---
+argument_specs:
+  main:
+    short_description: NetScaler Server Certificate
+    description:
+      - This role generates a new Server Certificate for a NetScaler load balancer, if an existing certificate doesn't exist or needs renewal.
+      - This role will use another role to generate the private key, CSR, and certificate.
+      - The role can be supplied by setting the `netscaler_certificate_type` to an existing type or setting it to `custom` and supplying a role name through the `netscaler_certificate_role` variable.
+      - The role referenced must output an encrypted private key in the `cert_private_key_content` variable and the certificate in the `cert_certificate_content` variable.
+      - At this time, this role does not support using ADM as a proxy for a NetScaler load balancer.
+    author: Jim Tarpley (@trippsc2)
+    options:
+      netscaler_nsip:
+        type: str
+        required: true
+        description:
+          - The NSIP address of the NetScaler load balancer.
+      netscaler_protocol:
+        type: str
+        required: false
+        choices:
+          - http
+          - https
+        description:
+          - The protocol to use when connecting to the NetScaler load balancer.
+          - If not provided, the role will default to `https`.
+      netscaler_validate_certs:
+        type: bool
+        required: false
+        description:
+          - Whether to validate SSL certificates when connecting to the NetScaler load balancer.
+          - If not provided, the role will default to `true`.
+      netscaler_api_path:
+        type: str
+        required: false
+        description:
+          - The path to the NetScaler Nitro API.
+          - If not provided, the role will default to `nitro/v1/config`.
+      netscaler_user:
+        type: str
+        required: false
+        description:
+          - The username to use when connecting to the NetScaler load balancer.
+          - This is mutually exclusive with *netscaler_token*.  One or the other is required.
+      netscaler_pass:
+        type: str
+        no_log: true
+        required: false
+        description:
+          - The password to use when connecting to the NetScaler load balancer.
+          - This is mutually exclusive with *netscaler_token*.  One or the other is required.
+      netscaler_token:
+        type: str
+        no_log: true
+        required: false
+        description:
+          - The token to use when connecting to the NetScaler load balancer.
+          - This is mutually exclusive with *netscaler_user* and *netscaler_pass*.  One or the other is required.
+      netscaler_certificate_name:
+        type: str
+        required: true
+        description:
+          - The name of the certificate to create or renew.
+      netscaler_certificate_regenerate_days:
+        type: int
+        required: false
+        default: 30
+        description:
+          - The number of days before the certificate expiration to regenerate the CSR.
+      netscaler_certificate_type:
+        type: str
+        required: true
+        choices:
+          - self_signed
+          - adcs_signed
+          - vault_signed
+          - custom
+        description:
+          - The type of certificate to generate.
+          - If set to `self_signed`, the role will use the **trippsc2.general.self_signed_certificate** role.
+          - If set to `adcs_signed`, the role will use the **trippsc2.adcs.signed_certificate** role.
+          - If set to `vault_signed`, the role will use the **trippsc2.hashi_vault.signed_certificate** role.
+          - If set to `custom`, the role will use the role supplied in the `netscaler_certificate_role` variable.
+      netscaler_certificate_role:
+        type: str
+        required: false
+        description:
+          - The role to use to generate the private key, CSR, and certificate.
+          - This is required if *netscaler_certificate_type* is set to `custom`. Otherwise, it is not used.
+      netscaler_private_key_passphrase:
+        type: str
+        no_log: true
+        required: true
+        description:
+          - The passphrase to use when decrypting the private key.
+      netscaler_private_key_filename:
+        type: str
+        required: true
+        description:
+          - The filename of the private key to use when generating the CSR.
+      netscaler_certificate_filename:
+        type: str
+        required: true
+        description:
+          - The filename of the certificate to use when generating the CSR.
+      netscaler_linked_ca_certificate_name:
+        type: str
+        required: false
+        description:
+          - The name of the CA certificate to link to the server certificate.
+          - If not provided, the role will not link a CA certificate.
+      netscaler_save_config:
+        type: bool
+        required: false
+        default: true
+        description:
+          - Whether to save the NetScaler configuration after creating the certificate.

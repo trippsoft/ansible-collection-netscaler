@@ -1,0 +1,6 @@
+---
+_netscaler_certificate_role: >-
+  {{ 'trippsc2.general.self_signed_certificate' if netscaler_certificate_type == 'self_signed' else
+     'trippsc2.adcs.signed_certificate' if netscaler_certificate_type == 'adcs_signed' else
+     'trippsc2.hashi_vault.signed_certificate' if netscaler_certificate_type == 'vault_signed' else
+     netscaler_certificate_role }}

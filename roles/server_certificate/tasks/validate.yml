@@ -1,0 +1,55 @@
+---
+- name: Validate that Netscaler NSIP is set to an IPv4 address
+  ansible.builtin.assert:
+    that:
+      - netscaler_nsip is ansible.utils.ipv4_address
+    fail_msg: Netscaler NSIP must be set to an IPv4 address.
+    success_msg: Netscaler NSIP is set to an IPv4 address.
+
+- name: Validate that Netscaler user or token are defined
+  ansible.builtin.assert:
+    that:
+      - netscaler_user is defined or netscaler_token is defined
+    fail_msg: Either Netscaler user or token must be defined.
+    success_msg: Either Netscaler user or token are defined.
+
+- name: Validate that Netscaler user and token are not both defined
+  ansible.builtin.assert:
+    that:
+      - netscaler_user is defined and netscaler_token is not defined or
+        netscaler_token is defined and netscaler_user is not defined
+    fail_msg: Netscaler user and token are mutually exclusive.
+    success_msg: Netscaler user and token are not both defined.
+
+- name: Validate that Netscaler password is defined when user is defined
+  when:
+    - netscaler_user is defined
+  ansible.builtin.assert:
+    that:
+      - netscaler_pass is defined
+    fail_msg: Netscaler password must be defined when user is defined.
+    success_msg: Netscaler password is defined when user is defined.
+
+- name: Validate that Netscaler certificate role is defined when certificate type is custom
+  when:
+    - netscaler_certificate_type == 'custom'
+  ansible.builtin.assert:
+    that:
+      - netscaler_certificate_role is defined
+    fail_msg: Netscaler certificate role must be defined when certificate type is custom.
+    success_msg: Netscaler certificate role is defined when certificate type is custom.
+
+- name: Set HTTP header (token)
+  when:
+    - netscaler_token is defined
+  ansible.builtin.set_fact:
+    _netscaler_http_headers:
+      Cookie: "NITRO_AUTH_TOKEN={{ netscaler_token }}"
+
+- name: Set HTTP header (user/pass)
+  when:
+    - netscaler_user is defined
+  ansible.builtin.set_fact:
+    _netscaler_http_headers:
+      X-NITRO-USER: "{{ netscaler_user }}"
+      X-NITRO-PASS: "{{ netscaler_pass }}"

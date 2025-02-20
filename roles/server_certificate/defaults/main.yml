@@ -1,0 +1,3 @@
+---
+netscaler_certificate_regenerate_days: 30
+netscaler_save_config: true

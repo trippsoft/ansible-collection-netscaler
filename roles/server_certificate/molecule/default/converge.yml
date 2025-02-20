@@ -1,0 +1,20 @@
+---
+- name: Converge new certificate
+  hosts:
+    - localhost
+  roles:
+    - role: trippsc2.netscaler.server_certificate
+      vars:
+        cert_not_after: +8d
+
+- name: Converge renew certificate
+  hosts:
+    - localhost
+  roles:
+    - role: trippsc2.netscaler.server_certificate
+
+- name: Converge for idempotence
+  hosts:
+    - localhost
+  roles:
+    - role: trippsc2.netscaler.server_certificate

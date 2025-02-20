@@ -1,0 +1,29 @@
+---
+- name: Set URL
+  ansible.builtin.set_fact:
+    _netscaler_sslcertkey_url: >-
+      {{ netscaler_protocol | default('https') }}://{{ netscaler_nsip }}/{{ netscaler_api_path | default('nitro/v1/config') }}/sslcertkey
+
+- name: Check certificate
+  ansible.builtin.uri:
+    url: "{{ _netscaler_sslcertkey_url }}"
+    method: GET
+    headers: "{{ _netscaler_http_headers }}"
+    validate_certs: "{{ netscaler_validate_certs | default(omit) }}"
+  register: _netscaler_certs
+
+- name: Get certificates with the expected name
+  ansible.builtin.set_fact:
+    _netscaler_existing_cert: >-
+      {{ _netscaler_certs.json.sslcertkey | selectattr('certkey', 'equalto', netscaler_certificate_name) }}
+
+- name: Set create certificate variable
+  ansible.builtin.set_fact:
+    _netscaler_generate_cert: "{{ _netscaler_existing_cert | length == 0 }}"
+
+- name: Set create certificate variable if certificate is near expiration
+  when:
+    - _netscaler_existing_cert | length > 0
+    - (_netscaler_existing_cert | map(attribute='daystoexpiration') | first | int) <= netscaler_certificate_regenerate_days
+  ansible.builtin.set_fact:
+    _netscaler_generate_cert: true

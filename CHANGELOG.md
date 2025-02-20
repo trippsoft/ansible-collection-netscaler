@@ -7,3 +7,4 @@ All notable changes to this project will be documented in this file.
 ### Collection
 
 - Initial release.
+- *server_certificate* role added.

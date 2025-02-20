@@ -1,5 +1,5 @@
 #! /bin/bash
 
-cd ./roles/generate_csr
+cd ./roles/server_certificate
 
 aar-doc . markdown

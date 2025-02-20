@@ -1,0 +1,31 @@
+---
+galaxy_info:
+  author: Jim Tarpley (@trippsc2)
+  namespace: trippsc2
+  role_name: server_certificate
+  description: |
+    This role generates a new Server Certificate for a NetScaler load balancer, if an existing certificate doesn't exist or needs renewal.
+
+    This role will use another role to generate the private key, CSR, and certificate.
+
+    The role can be supplied by setting the `netscaler_certificate_type` to an existing type or setting it to `custom` and supplying a role name through the `netscaler_certificate_role` variable.
+
+    The role referenced must output an encrypted private key in the `cert_private_key_content` variable and the certificate in the `cert_certificate_content` variable.
+
+    At this time, this role does not support using ADM as a proxy for a NetScaler load balancer.
+
+  license: MIT
+
+  min_ansible_version: '2.16'
+
+  platforms: []
+
+allow_duplicates: true
+
+collections:
+  - netscaler.adc
+  - trippsc2.adcs
+  - trippsc2.general
+  - trippsc2.hashi_vault
+
+dependencies: []
