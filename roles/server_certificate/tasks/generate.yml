@@ -20,6 +20,7 @@
     cert_private_key_passphrase: "{{ netscaler_private_key_passphrase }}"
 
 - name: Delete existing private key
+  delegate_to: localhost
   netscaler.adc.systemfile:
     api_path: "{{ netscaler_api_path | default(omit) }}"
     nsip: "{{ netscaler_nsip }}"
@@ -33,6 +34,7 @@
     state: absent
 
 - name: Delete existing certificate
+  delegate_to: localhost
   netscaler.adc.systemfile:
     api_path: "{{ netscaler_api_path | default(omit) }}"
     nsip: "{{ netscaler_nsip }}"
@@ -46,6 +48,7 @@
     state: absent
 
 - name: Save private key to NetScaler
+  delegate_to: localhost
   netscaler.adc.systemfile:
     api_path: "{{ netscaler_api_path | default(omit) }}"
     nsip: "{{ netscaler_nsip }}"
@@ -60,6 +63,7 @@
     state: present
 
 - name: Save certificate to NetScaler
+  delegate_to: localhost
   netscaler.adc.systemfile:
     api_path: "{{ netscaler_api_path | default(omit) }}"
     nsip: "{{ netscaler_nsip }}"
@@ -74,6 +78,7 @@
     state: present
 
 - name: Update certificate key pair
+  delegate_to: localhost
   netscaler.adc.sslcertkey:
     api_path: "{{ netscaler_api_path | default(omit) }}"
     nsip: "{{ netscaler_nsip }}"
@@ -98,6 +103,7 @@
       {{ netscaler_protocol | default('http') }}://{{ netscaler_nsip }}/{{ netscaler_api_path | default('nitro/v1/config') }}/sslcertkey?action=update
 
 - name: Update certificate key pair expiration time
+  delegate_to: localhost
   ansible.builtin.uri:
     url: "{{ _netscaler_certificate_key_pair_url }}"
     method: POST

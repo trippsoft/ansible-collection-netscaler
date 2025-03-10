@@ -5,6 +5,7 @@
       {{ netscaler_protocol | default('https') }}://{{ netscaler_nsip }}/{{ netscaler_api_path | default('nitro/v1/config') }}/sslcertkey
 
 - name: Check certificate
+  delegate_to: localhost
   ansible.builtin.uri:
     url: "{{ _netscaler_sslcertkey_url }}"
     method: GET
