@@ -13,11 +13,27 @@
   vars:
     cert_force_regenerate: true
     cert_existing_certificate_type: pipe
+    cert_acme_intermediate_certificate_to_file: false
+    cert_acme_intermediate_certificate_to_variable: true
     cert_private_key_to_file: false
     cert_private_key_to_variable: true
     cert_certificate_to_file: false
     cert_certificate_to_variable: true
     cert_private_key_passphrase: "{{ netscaler_private_key_passphrase }}"
+
+- name: Delete existing intermediate certificate
+  delegate_to: localhost
+  netscaler.adc.systemfile:
+    api_path: "{{ netscaler_api_path | default(omit) }}"
+    nsip: "{{ netscaler_nsip }}"
+    nitro_user: "{{ netscaler_user | default(omit) }}"
+    nitro_pass: "{{ netscaler_pass | default(omit) }}"
+    nitro_protocol: "{{ netscaler_protocol | default(omit) }}"
+    nitro_auth_token: "{{ netscaler_token | default(omit) }}"
+    validate_certs: "{{ netscaler_validate_certs | default(omit) }}"
+    filename: "{{ netscaler_intermediate_certificate_filename }}"
+    filelocation: /nsconfig/ssl/
+    state: absent
 
 - name: Delete existing private key
   delegate_to: localhost
@@ -46,6 +62,23 @@
     filename: "{{ netscaler_certificate_filename }}"
     filelocation: /nsconfig/ssl/
     state: absent
+
+- name: Save intermediate certificate to NetScaler
+  when:
+    - cert_acme_intermediate_certificate_content is defined
+  delegate_to: localhost
+  netscaler.adc.systemfile:
+    api_path: "{{ netscaler_api_path | default(omit) }}"
+    nsip: "{{ netscaler_nsip }}"
+    nitro_user: "{{ netscaler_user | default(omit) }}"
+    nitro_pass: "{{ netscaler_pass | default(omit) }}"
+    nitro_protocol: "{{ netscaler_protocol | default(omit) }}"
+    nitro_auth_token: "{{ netscaler_token | default(omit) }}"
+    validate_certs: "{{ netscaler_validate_certs | default(omit) }}"
+    filename: "{{ netscaler_intermediate_certificate_filename }}"
+    filelocation: /nsconfig/ssl/
+    filecontent: "{{ cert_acme_intermediate_certificate_content | b64encode }}"
+    state: present
 
 - name: Save private key to NetScaler
   delegate_to: localhost
@@ -77,6 +110,24 @@
     filecontent: "{{ cert_certificate_content | b64encode }}"
     state: present
 
+- name: Update intermediate certificate pair
+  when:
+    - cert_acme_intermediate_certificate_content is defined
+  delegate_to: localhost
+  netscaler.adc.sslcertkey:
+    api_path: "{{ netscaler_api_path | default(omit) }}"
+    nsip: "{{ netscaler_nsip }}"
+    nitro_user: "{{ netscaler_user | default(omit) }}"
+    nitro_pass: "{{ netscaler_pass | default(omit) }}"
+    nitro_protocol: "{{ netscaler_protocol | default(omit) }}"
+    nitro_auth_token: "{{ netscaler_token | default(omit) }}"
+    validate_certs: "{{ netscaler_validate_certs | default(omit) }}"
+    certkey: "{{ netscaler_intermediate_certificate_name }}"
+    cert: "{{ netscaler_intermediate_certificate_filename }}"
+    expirymonitor: ENABLED
+    save_config: "{{ netscaler_save_config }}"
+    state: present
+
 - name: Update certificate key pair
   delegate_to: localhost
   netscaler.adc.sslcertkey:
@@ -101,6 +152,23 @@
   ansible.builtin.set_fact:
     _netscaler_certificate_key_pair_url: >-
       {{ netscaler_protocol | default('http') }}://{{ netscaler_nsip }}/{{ netscaler_api_path | default('nitro/v1/config') }}/sslcertkey?action=update
+
+- name: Update intermediate certificate key pair expiration time
+  when:
+    - cert_acme_intermediate_certificate_content is defined
+  delegate_to: localhost
+  ansible.builtin.uri:
+    url: "{{ _netscaler_certificate_key_pair_url }}"
+    method: POST
+    body:
+      sslcertkey:
+        certkey: "{{ netscaler_intermediate_certificate_name }}"
+        cert: "{{ netscaler_intermediate_certificate_filename }}"
+    body_format: json
+    headers: "{{ _netscaler_http_headers }}"
+    validate_certs: "{{ netscaler_validate_certs | default(omit) }}"
+    status_code:
+      - 200
 
 - name: Update certificate key pair expiration time
   delegate_to: localhost

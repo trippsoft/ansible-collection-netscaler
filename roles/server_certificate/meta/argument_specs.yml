@@ -74,12 +74,14 @@ argument_specs:
           - self_signed
           - adcs_signed
           - vault_signed
+          - acme_dns_signed
           - custom
         description:
           - The type of certificate to generate.
           - If set to `self_signed`, the role will use the **trippsc2.general.self_signed_certificate** role.
           - If set to `adcs_signed`, the role will use the **trippsc2.adcs.signed_certificate** role.
           - If set to `vault_signed`, the role will use the **trippsc2.hashi_vault.signed_certificate** role.
+          - If set to `acme_dns_signed`, the role will use the **trippsc2.general.acme_dns_certificate** role.
           - If set to `custom`, the role will use the role supplied in the `netscaler_certificate_role` variable.
       netscaler_certificate_role:
         type: str
@@ -98,6 +100,20 @@ argument_specs:
         required: true
         description:
           - The filename of the private key to use when generating the CSR.
+      netscaler_intermediate_certificate_filename:
+        type: str
+        required: false
+        description:
+          - The filename of the intermediate CA certificate.
+          - If *netscaler_certificate_type* is set to `acme_dns_signed`, this is required.
+          - This should not be depended on by other certificates, as it will be replaced if the CA chain changes.
+      netscaler_intermediate_certificate_name:
+        type: str
+        required: false
+        description:
+          - The name of the intermediate CA certificate.
+          - If *netscaler_certificate_type* is set to `acme_dns_signed`, this is required.
+          - This should not be depended on by other certificates, as it will be replaced if the CA chain changes.
       netscaler_certificate_filename:
         type: str
         required: true
