@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.0.3] - 2025-03-25
+
+### Role - server_certificate
+
+- Fixed missing configuration.
+
 ## [1.0.2] - 2025-03-24
 
 ### Role - server_certificate

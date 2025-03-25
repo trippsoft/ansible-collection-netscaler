@@ -1,6 +1,10 @@
 ---
 _netscaler_certificate_role: >-
-  {{ 'trippsc2.general.self_signed_certificate' if netscaler_certificate_type == 'self_signed' else
-     'trippsc2.adcs.signed_certificate' if netscaler_certificate_type == 'adcs_signed' else
-     'trippsc2.hashi_vault.signed_certificate' if netscaler_certificate_type == 'vault_signed' else
+  {{ _netscaler_known_roles[netscaler_certificate_type] if netscaler_certificate_type != 'custom' else
      netscaler_certificate_role }}
+
+_netscaler_known_roles:
+  self_signed: trippsc2.general.self_signed_certificate
+  adcs_signed: trippsc2.adcs.signed_certificate
+  vault_signed: trippsc2.hashi_vault.signed_certificate
+  acme_dns_signed: trippsc2.general.acme_dns_certificate
