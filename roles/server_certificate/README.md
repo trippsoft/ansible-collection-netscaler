@@ -1,7 +1,7 @@
 <!-- BEGIN_ANSIBLE_DOCS -->
 
 # Ansible Role: trippsc2.netscaler.server_certificate
-Version: 1.0.2
+Version: 1.0.3
 
 This role generates a new Server Certificate for a NetScaler load balancer, if an existing certificate doesn't exist or needs renewal.
 
