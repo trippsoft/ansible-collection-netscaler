@@ -23,6 +23,8 @@
 
 - name: Delete existing intermediate certificate
   delegate_to: localhost
+  when:
+    - cert_acme_intermediate_certificate_content is defined
   netscaler.adc.systemfile:
     api_path: "{{ netscaler_api_path | default(omit) }}"
     nsip: "{{ netscaler_nsip }}"
