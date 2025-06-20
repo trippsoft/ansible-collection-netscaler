@@ -1,7 +1,7 @@
 <!-- BEGIN_ANSIBLE_DOCS -->
 
 # Ansible Role: trippsc2.netscaler.server_certificate
-Version: 1.0.4
+Version: 1.0.5
 
 This role generates a new Server Certificate for a NetScaler load balancer, if an existing certificate doesn't exist or needs renewal.
 
@@ -21,6 +21,7 @@ At this time, this role does not support using ADM as a proxy for a NetScaler lo
 
 | Collection |
 | ---------- |
+| ansible.utils |
 | netscaler.adc |
 | trippsc2.adcs |
 | trippsc2.general |
@@ -31,6 +32,7 @@ At this time, this role does not support using ADM as a proxy for a NetScaler lo
 |---|---|---|---|---|---|
 | netscaler_nsip | <p>The NSIP address of the NetScaler load balancer.</p> | str | yes |  |  |
 | netscaler_protocol | <p>The protocol to use when connecting to the NetScaler load balancer.</p><p>If not provided, the role will default to `https`.</p> | str | no | <ul><li>http</li><li>https</li></ul> |  |
+| netscaler_port | <p>The port to use when connecting to the NetScaler load balancer.</p><p>If not provided and *netscaler_protocol* is set to `https`, the role will default to `443`.</p><p>If not provided and *netscaler_protocol* is set to `http`, the role will default to `80`.</p> | int | no |  |  |
 | netscaler_validate_certs | <p>Whether to validate SSL certificates when connecting to the NetScaler load balancer.</p><p>If not provided, the role will default to `true`.</p> | bool | no |  |  |
 | netscaler_api_path | <p>The path to the NetScaler Nitro API.</p><p>If not provided, the role will default to `nitro/v1/config`.</p> | str | no |  |  |
 | netscaler_user | <p>The username to use when connecting to the NetScaler load balancer.</p><p>This is mutually exclusive with *netscaler_token*.  One or the other is required.</p> | str | no |  |  |
