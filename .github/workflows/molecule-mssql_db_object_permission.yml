@@ -1,0 +1,58 @@
+---
+name: Molecule - server_certificate role
+'on':
+  workflow_call: {}
+  workflow_dispatch: {}
+  pull_request:
+    branches:
+      - main
+    paths:
+      - galaxy.yml
+      - roles/server_certificate/**
+      - '!roles/server_certificate/.aar_doc.yml'
+      - '!roles/server_certificate/README.md'
+      - '!roles/server_certificate/meta/argument_specs.yml'
+      - '!roles/server_certificate/meta/main.yml'
+  push:
+    branches:
+      - main
+    paths:
+      - galaxy.yml
+      - roles/server_certificate/**
+      - '!roles/server_certificate/.aar_doc.yml'
+      - '!roles/server_certificate/README.md'
+      - '!roles/server_certificate/meta/argument_specs.yml'
+      - '!roles/server_certificate/meta/main.yml'
+defaults:
+  run:
+    working-directory: 'trippsc2.netscaler'
+jobs:
+  molecule:
+    name: Run Molecule tests
+    runs-on:
+      - self-hosted
+      - linux
+      - x64
+    strategy:
+      fail-fast: false
+      matrix:
+        netscaler_version:
+          - '13.1-49.15'
+          - '14.1-4.42'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          path: 'trippsc2.netscaler'
+      - name: Run Molecule tests
+        run: |
+          source ~/venv/ansible-2.16/bin/activate
+          rm -rf ~/.ansible/collections/ansible_collections/*
+          cd ./roles/server_certificate
+          molecule test
+          rm -rf ~/.ansible/collections/ansible_collections/*
+          deactivate
+        env:
+          ANSIBLE_FORCE_COLOR: '1'
+          PY_COLORS: '1'
+          MOLECULE_NETSCALER_VERSION: ${{ matrix.netscaler_version }}

@@ -1,3 +1,5 @@
 ---
 netscaler_certificate_regenerate_days: 30
 netscaler_save_config: true
+netscaler_port: >-
+  {{ '443' if netscaler_protocol == 'https' else '80' }}

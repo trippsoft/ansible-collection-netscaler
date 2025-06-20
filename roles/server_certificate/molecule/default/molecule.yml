@@ -3,26 +3,20 @@ driver:
   name: default
 platforms:
   - name: netscaler
-    image_file: ${MOLECULE_IMAGES_PATH:-/var/lib/libvirt/images}/${MOLECULE_NETSCALER_IMAGE:-nsvpx131.qcow2}
-    name_prefix: netscaler_generate_csr_
-    ip: '192.168.122.2'
+    netscaler_version: ${MOLECULE_NETSCALER_VERSION:-13.1-49.15}
+    http_port: 33080
+    groups:
+      - subjects
 provisioner:
   name: ansible
   inventory:
     group_vars:
-      all:
-        netscaler_nsip: '192.168.122.2'
-        netscaler_protocol: http
-        netscaler_user: nsroot
-        netscaler_pass: molecule
+      subjects:
         netscaler_certificate_name: test
         netscaler_certificate_type: self_signed
         netscaler_private_key_passphrase: SecurePass
         netscaler_private_key_filename: test.key
         netscaler_certificate_filename: test.cert
-  playbooks:
-    create: create/main.yml
-    destroy: destroy/main.yml
 verifier:
   name: ansible
 scenario:

@@ -6,6 +6,14 @@
     fail_msg: Netscaler NSIP must be set to an IPv4 address.
     success_msg: Netscaler NSIP is set to an IPv4 address.
 
+- name: Validate that Netscaler port is in the valid range
+  ansible.builtin.assert:
+    that:
+      - netscaler_port | int >= 1
+      - netscaler_port | int <= 65535
+    fail_msg: Netscaler port must be between 1 and 65535.
+    success_msg: Netscaler port is in the valid range.
+
 - name: Validate that Netscaler user or token are defined
   ansible.builtin.assert:
     that:

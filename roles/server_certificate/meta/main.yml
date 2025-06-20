@@ -23,6 +23,7 @@ galaxy_info:
 allow_duplicates: true
 
 collections:
+  - ansible.utils
   - netscaler.adc
   - trippsc2.adcs
   - trippsc2.general

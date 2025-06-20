@@ -1,0 +1,96 @@
+---
+- name: Create
+  hosts:
+    - localhost
+  connection: local
+  gather_facts: false
+  no_log: "{{ molecule_no_log }}"
+  vars:
+    molecule_labels:
+      owner: molecule
+  tags:
+    - always
+  tasks:
+    - name: Create molecule instance(s)
+      loop: "{{ molecule_yml.platforms }}"
+      loop_control:
+        label: "{{ item.name }}"
+      community.docker.docker_container:
+        name: "netscaler_server_certificate_{{ item.name }}"
+        image: "quay.io/netscaler/netscaler-cpx:{{ item.netscaler_version }}"
+        pull: always
+        capabilities:
+          - NET_ADMIN
+        published_ports:
+          - "127.0.0.1:{{ item.http_port | default(33080) }}:9080/tcp"
+        ulimits:
+          - 'core:-1'
+        env:
+          CPX_CORES: '2'
+          EULA: 'yes'
+        tty: true
+        labels: "{{ molecule_labels }}"
+        state: started
+
+    - name: Wait for HTTP service(s) to be available
+      loop: "{{ molecule_yml.platforms }}"
+      loop_control:
+        label: "{{ item.name }}"
+      ansible.builtin.wait_for:
+        host: 127.0.0.1
+        port: "{{ item.http_port | default(33080) }}"
+        delay: 30
+        timeout: 300
+        state: started
+
+    - name: Get contents of /var/random_id on the instance
+      loop: "{{ molecule_yml.platforms }}"
+      loop_control:
+        label: "{{ item.name }}"
+      community.docker.docker_container_exec:
+        container: "netscaler_server_certificate_{{ item.name }}"
+        command: cat /var/random_id
+      register: _random_id
+      no_log: false
+
+    - name: Add container to inventory
+      loop: "{{ _random_id.results }}"
+      loop_control:
+        label: "{{ item.item.name }}"
+      vars:
+        inventory_partial_yaml: |
+          all:
+            hosts:
+              {{ item.item.name }}:
+                ansible_connection: local
+                netscaler_nsip: '127.0.0.1'
+                netscaler_port: {{ item.item.http_port | default(33080) }}
+                netscaler_protocol: http
+                netscaler_user: nsroot
+                netscaler_pass: "{{ item.stdout }}"
+      ansible.builtin.set_fact:
+        molecule_inventory: >-
+          {{ molecule_inventory | default({}) | combine(inventory_partial_yaml | from_yaml, recursive=true) }}
+
+    - name: Dump molecule inventory
+      ansible.builtin.copy:
+        content: "{{ molecule_inventory | to_nice_yaml }}"
+        dest: "{{ molecule_ephemeral_directory }}/inventory/molecule_inventory.yml"
+        mode: '0600'
+
+    - name: Force inventory refresh
+      ansible.builtin.meta: refresh_inventory
+
+    - name: Validate that NITRO API is available for each instance
+      loop: "{{ molecule_yml.platforms }}"
+      loop_control:
+        label: "{{ item.name }}"
+      ansible.builtin.uri:
+        url: "{{ hostvars[item.name].netscaler_protocol }}://{{ hostvars[item.name].netscaler_nsip }}:{{ hostvars[item.name].netscaler_port }}/nitro/v1/config/nsip"
+        method: GET
+        user: "{{ hostvars[item.name].netscaler_user }}"
+        password: "{{ hostvars[item.name].netscaler_pass }}"
+      retries: 5
+      delay: 10
+      register: _nitro_api
+      until: _nitro_api is success

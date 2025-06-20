@@ -27,7 +27,7 @@
     - cert_acme_intermediate_certificate_content is defined
   netscaler.adc.systemfile:
     api_path: "{{ netscaler_api_path | default(omit) }}"
-    nsip: "{{ netscaler_nsip }}"
+    nsip: "{{ _netscaler_nsip }}"
     nitro_user: "{{ netscaler_user | default(omit) }}"
     nitro_pass: "{{ netscaler_pass | default(omit) }}"
     nitro_protocol: "{{ netscaler_protocol | default(omit) }}"
@@ -41,7 +41,7 @@
   delegate_to: localhost
   netscaler.adc.systemfile:
     api_path: "{{ netscaler_api_path | default(omit) }}"
-    nsip: "{{ netscaler_nsip }}"
+    nsip: "{{ _netscaler_nsip }}"
     nitro_user: "{{ netscaler_user | default(omit) }}"
     nitro_pass: "{{ netscaler_pass | default(omit) }}"
     nitro_protocol: "{{ netscaler_protocol | default(omit) }}"
@@ -55,7 +55,7 @@
   delegate_to: localhost
   netscaler.adc.systemfile:
     api_path: "{{ netscaler_api_path | default(omit) }}"
-    nsip: "{{ netscaler_nsip }}"
+    nsip: "{{ _netscaler_nsip }}"
     nitro_user: "{{ netscaler_user | default(omit) }}"
     nitro_pass: "{{ netscaler_pass | default(omit) }}"
     nitro_protocol: "{{ netscaler_protocol | default(omit) }}"
@@ -71,7 +71,7 @@
   delegate_to: localhost
   netscaler.adc.systemfile:
     api_path: "{{ netscaler_api_path | default(omit) }}"
-    nsip: "{{ netscaler_nsip }}"
+    nsip: "{{ _netscaler_nsip }}"
     nitro_user: "{{ netscaler_user | default(omit) }}"
     nitro_pass: "{{ netscaler_pass | default(omit) }}"
     nitro_protocol: "{{ netscaler_protocol | default(omit) }}"
@@ -86,7 +86,7 @@
   delegate_to: localhost
   netscaler.adc.systemfile:
     api_path: "{{ netscaler_api_path | default(omit) }}"
-    nsip: "{{ netscaler_nsip }}"
+    nsip: "{{ _netscaler_nsip }}"
     nitro_user: "{{ netscaler_user | default(omit) }}"
     nitro_pass: "{{ netscaler_pass | default(omit) }}"
     nitro_protocol: "{{ netscaler_protocol | default(omit) }}"
@@ -101,7 +101,7 @@
   delegate_to: localhost
   netscaler.adc.systemfile:
     api_path: "{{ netscaler_api_path | default(omit) }}"
-    nsip: "{{ netscaler_nsip }}"
+    nsip: "{{ _netscaler_nsip }}"
     nitro_user: "{{ netscaler_user | default(omit) }}"
     nitro_pass: "{{ netscaler_pass | default(omit) }}"
     nitro_protocol: "{{ netscaler_protocol | default(omit) }}"
@@ -118,7 +118,7 @@
   delegate_to: localhost
   netscaler.adc.sslcertkey:
     api_path: "{{ netscaler_api_path | default(omit) }}"
-    nsip: "{{ netscaler_nsip }}"
+    nsip: "{{ _netscaler_nsip }}"
     nitro_user: "{{ netscaler_user | default(omit) }}"
     nitro_pass: "{{ netscaler_pass | default(omit) }}"
     nitro_protocol: "{{ netscaler_protocol | default(omit) }}"
@@ -134,7 +134,7 @@
   delegate_to: localhost
   netscaler.adc.sslcertkey:
     api_path: "{{ netscaler_api_path | default(omit) }}"
-    nsip: "{{ netscaler_nsip }}"
+    nsip: "{{ _netscaler_nsip }}"
     nitro_user: "{{ netscaler_user | default(omit) }}"
     nitro_pass: "{{ netscaler_pass | default(omit) }}"
     nitro_protocol: "{{ netscaler_protocol | default(omit) }}"
@@ -153,7 +153,7 @@
 - name: Set certificate key pair URL
   ansible.builtin.set_fact:
     _netscaler_certificate_key_pair_url: >-
-      {{ netscaler_protocol | default('http') }}://{{ netscaler_nsip }}/{{ netscaler_api_path | default('nitro/v1/config') }}/sslcertkey?action=update
+      {{ netscaler_protocol | default('http') }}://{{ _netscaler_nsip }}/{{ netscaler_api_path | default('nitro/v1/config') }}/sslcertkey?action=update
 
 - name: Update intermediate certificate key pair expiration time
   when:

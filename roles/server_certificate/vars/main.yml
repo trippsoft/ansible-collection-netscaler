@@ -8,3 +8,5 @@ _netscaler_known_roles:
   adcs_signed: trippsc2.adcs.signed_certificate
   vault_signed: trippsc2.hashi_vault.signed_certificate
   acme_dns_signed: trippsc2.general.acme_dns_certificate
+
+_netscaler_nsip: "{{ netscaler_nsip }}:{{ netscaler_port }}"

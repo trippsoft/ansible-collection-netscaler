@@ -2,7 +2,7 @@
 - name: Set URL
   ansible.builtin.set_fact:
     _netscaler_sslcertkey_url: >-
-      {{ netscaler_protocol | default('https') }}://{{ netscaler_nsip }}/{{ netscaler_api_path | default('nitro/v1/config') }}/sslcertkey
+      {{ netscaler_protocol | default('https') }}://{{ _netscaler_nsip }}/{{ netscaler_api_path | default('nitro/v1/config') }}/sslcertkey
 
 - name: Check certificate
   delegate_to: localhost

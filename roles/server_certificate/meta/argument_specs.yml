@@ -24,6 +24,13 @@ argument_specs:
         description:
           - The protocol to use when connecting to the NetScaler load balancer.
           - If not provided, the role will default to `https`.
+      netscaler_port:
+        type: int
+        required: false
+        description:
+          - The port to use when connecting to the NetScaler load balancer.
+          - If not provided and *netscaler_protocol* is set to `https`, the role will default to `443`.
+          - If not provided and *netscaler_protocol* is set to `http`, the role will default to `80`.
       netscaler_validate_certs:
         type: bool
         required: false
