@@ -107,20 +107,6 @@ argument_specs:
         required: true
         description:
           - The filename of the private key to use when generating the CSR.
-      netscaler_intermediate_certificate_filename:
-        type: str
-        required: false
-        description:
-          - The filename of the intermediate CA certificate.
-          - If *netscaler_certificate_type* is set to `acme_dns_signed`, this is required.
-          - This should not be depended on by other certificates, as it will be replaced if the CA chain changes.
-      netscaler_intermediate_certificate_name:
-        type: str
-        required: false
-        description:
-          - The name of the intermediate CA certificate.
-          - If *netscaler_certificate_type* is set to `acme_dns_signed`, this is required.
-          - This should not be depended on by other certificates, as it will be replaced if the CA chain changes.
       netscaler_certificate_filename:
         type: str
         required: true

@@ -21,21 +21,19 @@
     cert_certificate_to_variable: true
     cert_private_key_passphrase: "{{ netscaler_private_key_passphrase }}"
 
-- name: Delete existing intermediate certificate
-  delegate_to: localhost
+- name: Get intermediate certificate info
   when:
     - cert_acme_intermediate_certificate_content is defined
-  netscaler.adc.systemfile:
-    api_path: "{{ netscaler_api_path | default(omit) }}"
-    nsip: "{{ _netscaler_nsip }}"
-    nitro_user: "{{ netscaler_user | default(omit) }}"
-    nitro_pass: "{{ netscaler_pass | default(omit) }}"
-    nitro_protocol: "{{ netscaler_protocol | default(omit) }}"
-    nitro_auth_token: "{{ netscaler_token | default(omit) }}"
-    validate_certs: "{{ netscaler_validate_certs | default(omit) }}"
-    filename: "{{ netscaler_intermediate_certificate_filename }}"
-    filelocation: /nsconfig/ssl/
-    state: absent
+  delegate_to: localhost
+  community.crypto.x509_certificate_info:
+    content: "{{ cert_acme_intermediate_certificate_content }}"
+  register: _netscaler_intermediate_cert_info
+
+- name: Set intermediate common name to variable
+  when:
+    - cert_acme_intermediate_certificate_content is defined
+  ansible.builtin.set_fact:
+    _netscaler_intermediate_cert_common_name: "{{ _netscaler_intermediate_cert_info.subject.commonName | lower }}"
 
 - name: Delete existing private key
   delegate_to: localhost
@@ -67,7 +65,7 @@
 
 - name: Save intermediate certificate to NetScaler
   when:
-    - cert_acme_intermediate_certificate_content is defined
+    - _netscaler_intermediate_cert_common_name is defined
   delegate_to: localhost
   netscaler.adc.systemfile:
     api_path: "{{ netscaler_api_path | default(omit) }}"
@@ -77,7 +75,7 @@
     nitro_protocol: "{{ netscaler_protocol | default(omit) }}"
     nitro_auth_token: "{{ netscaler_token | default(omit) }}"
     validate_certs: "{{ netscaler_validate_certs | default(omit) }}"
-    filename: "{{ netscaler_intermediate_certificate_filename }}"
+    filename: "{{ _netscaler_intermediate_cert_common_name }}.cert"
     filelocation: /nsconfig/ssl/
     filecontent: "{{ cert_acme_intermediate_certificate_content | b64encode }}"
     state: present
@@ -114,7 +112,7 @@
 
 - name: Update intermediate certificate pair
   when:
-    - cert_acme_intermediate_certificate_content is defined
+    - _netscaler_intermediate_cert_common_name is defined
   delegate_to: localhost
   netscaler.adc.sslcertkey:
     api_path: "{{ netscaler_api_path | default(omit) }}"
@@ -124,8 +122,8 @@
     nitro_protocol: "{{ netscaler_protocol | default(omit) }}"
     nitro_auth_token: "{{ netscaler_token | default(omit) }}"
     validate_certs: "{{ netscaler_validate_certs | default(omit) }}"
-    certkey: "{{ netscaler_intermediate_certificate_name }}"
-    cert: "{{ netscaler_intermediate_certificate_filename }}"
+    certkey: "{{ _netscaler_intermediate_cert_common_name }}"
+    cert: "{{ _netscaler_intermediate_cert_common_name }}.cert"
     expirymonitor: ENABLED
     save_config: "{{ netscaler_save_config }}"
     state: present
@@ -157,15 +155,15 @@
 
 - name: Update intermediate certificate key pair expiration time
   when:
-    - cert_acme_intermediate_certificate_content is defined
+    - _netscaler_intermediate_cert_common_name is defined
   delegate_to: localhost
   ansible.builtin.uri:
     url: "{{ _netscaler_certificate_key_pair_url }}"
     method: POST
     body:
       sslcertkey:
-        certkey: "{{ netscaler_intermediate_certificate_name }}"
-        cert: "{{ netscaler_intermediate_certificate_filename }}"
+        certkey: "{{ _netscaler_intermediate_cert_common_name }}"
+        cert: "{{ _netscaler_intermediate_cert_common_name }}.cert"
     body_format: json
     headers: "{{ _netscaler_http_headers }}"
     validate_certs: "{{ netscaler_validate_certs | default(omit) }}"
