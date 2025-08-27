@@ -142,7 +142,7 @@
     cert: "{{ netscaler_certificate_filename }}"
     key: "{{ netscaler_private_key_filename }}"
     expirymonitor: ENABLED
-    linkcertkeyname: "{{ netscaler_linked_ca_certificate_name | default(omit) }}"
+    linkcertkeyname: "{{ netscaler_linked_ca_certificate_name | default(_netscaler_intermediate_cert_common_name | default(omit)) }}"
     passplain: "{{ netscaler_private_key_passphrase }}"
     password: true
     save_config: "{{ netscaler_save_config }}"

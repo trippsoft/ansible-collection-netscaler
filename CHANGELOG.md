@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.1.1] - 2025-08-27
+
+### Role - server_certificate
+
+- Bugfix to allow ACME intermediate to be linked.
+
 ## [1.1.0] - 2025-08-27
 
 ### Role - server_certificate

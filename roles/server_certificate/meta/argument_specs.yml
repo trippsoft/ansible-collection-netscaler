@@ -117,7 +117,8 @@ argument_specs:
         required: false
         description:
           - The name of the CA certificate to link to the server certificate.
-          - If not provided, the role will not link a CA certificate.
+          - If not provided and a role that returns an intermediate certificate is used, the role will link the intermediate certificate to the server certificate.
+          - Otherwise, the role will not link a CA certificate.
       netscaler_save_config:
         type: bool
         required: false
