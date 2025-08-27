@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.1.2] - 2025-08-27
+
+### Role - server_certificate
+
+- Bugfix to prevent incorrect validation result.
+
 ## [1.1.1] - 2025-08-27
 
 ### Role - server_certificate

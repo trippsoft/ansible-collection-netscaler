@@ -38,24 +38,6 @@
     fail_msg: Netscaler password must be defined when user is defined.
     success_msg: Netscaler password is defined when user is defined.
 
-- name: Validate that intermediate certificate filename is defined
-  when:
-    - netscaler_certificate_type == 'acme_dns_signed'
-  ansible.builtin.assert:
-    that:
-      - netscaler_intermediate_certificate_filename is defined
-    fail_msg: Intermediate certificate filename must be defined when certificate type is acme_dns_signed.
-    success_msg: Intermediate certificate filename is defined when certificate type is acme_dns_signed.
-
-- name: Validate that intermediate certificate name is defined
-  when:
-    - netscaler_certificate_type == 'acme_dns_signed'
-  ansible.builtin.assert:
-    that:
-      - netscaler_intermediate_certificate_name is defined
-    fail_msg: Intermediate certificate name must be defined when certificate type is acme_dns_signed.
-    success_msg: Intermediate certificate name is defined when certificate type is acme_dns_signed.
-
 - name: Validate that Netscaler certificate role is defined when certificate type is custom
   when:
     - netscaler_certificate_type == 'custom'
