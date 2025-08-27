@@ -44,8 +44,6 @@ At this time, this role does not support using ADM as a proxy for a NetScaler lo
 | netscaler_certificate_role | <p>The role to use to generate the private key, CSR, and certificate.</p><p>This is required if *netscaler_certificate_type* is set to `custom`. Otherwise, it is not used.</p> | str | no |  |  |
 | netscaler_private_key_passphrase | <p>The passphrase to use when decrypting the private key.</p> | str | yes |  |  |
 | netscaler_private_key_filename | <p>The filename of the private key to use when generating the CSR.</p> | str | yes |  |  |
-| netscaler_intermediate_certificate_filename | <p>The filename of the intermediate CA certificate.</p><p>If *netscaler_certificate_type* is set to `acme_dns_signed`, this is required.</p><p>This should not be depended on by other certificates, as it will be replaced if the CA chain changes.</p> | str | no |  |  |
-| netscaler_intermediate_certificate_name | <p>The name of the intermediate CA certificate.</p><p>If *netscaler_certificate_type* is set to `acme_dns_signed`, this is required.</p><p>This should not be depended on by other certificates, as it will be replaced if the CA chain changes.</p> | str | no |  |  |
 | netscaler_certificate_filename | <p>The filename of the certificate to use when generating the CSR.</p> | str | yes |  |  |
 | netscaler_linked_ca_certificate_name | <p>The name of the CA certificate to link to the server certificate.</p><p>If not provided, the role will not link a CA certificate.</p> | str | no |  |  |
 | netscaler_save_config | <p>Whether to save the NetScaler configuration after creating the certificate.</p> | bool | no |  | True |
