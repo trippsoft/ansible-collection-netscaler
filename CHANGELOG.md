@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.1.0] - 2025-08-27
+
+### Role - server_certificate
+
+- Refactored intermediate certificate handling to use common name variable.
+
 ## [1.0.5] - 2025-06-20
 
 ### Collection

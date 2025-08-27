@@ -1,7 +1,7 @@
 ---
 namespace: trippsc2
 name: netscaler
-version: 1.0.5
+version: 1.1.0
 readme: README.md
 authors:
   - Jim Tarpley (@trippsc2)
@@ -15,6 +15,7 @@ tags:
 
 dependencies:
   ansible.utils: '>=2.5.0'
+  community.crypto: '>=1.3.0'
   netscaler.adc: '>=2.6.0'
   trippsc2.adcs: '>=1.4.0'
   trippsc2.general: '>=2.9.0'
