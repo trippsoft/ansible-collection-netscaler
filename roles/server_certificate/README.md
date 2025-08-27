@@ -1,7 +1,7 @@
 <!-- BEGIN_ANSIBLE_DOCS -->
 
 # Ansible Role: trippsc2.netscaler.server_certificate
-Version: 1.1.0
+Version: 1.1.1
 
 This role generates a new Server Certificate for a NetScaler load balancer, if an existing certificate doesn't exist or needs renewal.
 
@@ -45,7 +45,7 @@ At this time, this role does not support using ADM as a proxy for a NetScaler lo
 | netscaler_private_key_passphrase | <p>The passphrase to use when decrypting the private key.</p> | str | yes |  |  |
 | netscaler_private_key_filename | <p>The filename of the private key to use when generating the CSR.</p> | str | yes |  |  |
 | netscaler_certificate_filename | <p>The filename of the certificate to use when generating the CSR.</p> | str | yes |  |  |
-| netscaler_linked_ca_certificate_name | <p>The name of the CA certificate to link to the server certificate.</p><p>If not provided, the role will not link a CA certificate.</p> | str | no |  |  |
+| netscaler_linked_ca_certificate_name | <p>The name of the CA certificate to link to the server certificate.</p><p>If not provided and a role that returns an intermediate certificate is used, the role will link the intermediate certificate to the server certificate.</p><p>Otherwise, the role will not link a CA certificate.</p> | str | no |  |  |
 | netscaler_save_config | <p>Whether to save the NetScaler configuration after creating the certificate.</p> | bool | no |  | True |
 
 
