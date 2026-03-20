@@ -28,7 +28,6 @@ scenario:
     - create
     - prepare
     - converge
-    #- idempotence
     # Removed idempotence check, because this scenario tests for idempotence implicitly.
     - side_effect
     - verify
