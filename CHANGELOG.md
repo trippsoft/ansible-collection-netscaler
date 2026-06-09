@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.2.2] - 2026-06-09
+
+### Role - server_certificate
+
+- Fixed a bug that caused the role to fail when the intermediate certificate is different from the existing one.
+
 ## [1.2.1] - 2026-06-09
 
 ### Role - server_certificate
