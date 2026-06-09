@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.2.0] - 2026-06-09
+
+### Role - server_certificate
+
+- Adjusted role to not delete files that can be updated, **netscaler.adc** now supports this functionality.
+
 ## [1.1.2] - 2025-08-27
 
 ### Role - server_certificate
