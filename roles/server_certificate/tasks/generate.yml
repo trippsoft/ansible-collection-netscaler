@@ -51,6 +51,10 @@
     filelocation: /nsconfig/ssl/
     filecontent: "{{ cert_acme_intermediate_certificate_content | b64encode }}"
     state: present
+  register: _netscaler_intermediate_cert_upload_result
+  retries: 3
+  delay: 5
+  until: _netscaler_intermediate_cert_upload_result is success
 
 - name: Save private key to NetScaler
   delegate_to: localhost
@@ -66,6 +70,10 @@
     filelocation: /nsconfig/ssl/
     filecontent: "{{ cert_private_key_content | b64encode }}"
     state: present
+  register: _netscaler_private_key_upload_result
+  retries: 3
+  delay: 5
+  until: _netscaler_private_key_upload_result is success
 
 - name: Save certificate to NetScaler
   delegate_to: localhost
@@ -81,6 +89,10 @@
     filelocation: /nsconfig/ssl/
     filecontent: "{{ cert_certificate_content | b64encode }}"
     state: present
+  register: _netscaler_certificate_upload_result
+  retries: 3
+  delay: 5
+  until: _netscaler_certificate_upload_result is success
 
 - name: Update intermediate certificate pair
   when:

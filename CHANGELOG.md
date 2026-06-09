@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.2.1] - 2026-06-09
+
+### Role - server_certificate
+
+- Added retries and delay to file upload tasks to handle potential transient issues with file uploads to NetScaler, improving reliability of the role when managing certificates.
+
 ## [1.2.0] - 2026-06-09
 
 ### Role - server_certificate
