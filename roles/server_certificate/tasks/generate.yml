@@ -35,34 +35,6 @@
   ansible.builtin.set_fact:
     _netscaler_intermediate_cert_common_name: "{{ _netscaler_intermediate_cert_info.subject.commonName | lower }}"
 
-- name: Delete existing private key
-  delegate_to: localhost
-  netscaler.adc.systemfile:
-    api_path: "{{ netscaler_api_path | default(omit) }}"
-    nsip: "{{ _netscaler_nsip }}"
-    nitro_user: "{{ netscaler_user | default(omit) }}"
-    nitro_pass: "{{ netscaler_pass | default(omit) }}"
-    nitro_protocol: "{{ netscaler_protocol | default(omit) }}"
-    nitro_auth_token: "{{ netscaler_token | default(omit) }}"
-    validate_certs: "{{ netscaler_validate_certs | default(omit) }}"
-    filename: "{{ netscaler_private_key_filename }}"
-    filelocation: /nsconfig/ssl/
-    state: absent
-
-- name: Delete existing certificate
-  delegate_to: localhost
-  netscaler.adc.systemfile:
-    api_path: "{{ netscaler_api_path | default(omit) }}"
-    nsip: "{{ _netscaler_nsip }}"
-    nitro_user: "{{ netscaler_user | default(omit) }}"
-    nitro_pass: "{{ netscaler_pass | default(omit) }}"
-    nitro_protocol: "{{ netscaler_protocol | default(omit) }}"
-    nitro_auth_token: "{{ netscaler_token | default(omit) }}"
-    validate_certs: "{{ netscaler_validate_certs | default(omit) }}"
-    filename: "{{ netscaler_certificate_filename }}"
-    filelocation: /nsconfig/ssl/
-    state: absent
-
 - name: Save intermediate certificate to NetScaler
   when:
     - _netscaler_intermediate_cert_common_name is defined

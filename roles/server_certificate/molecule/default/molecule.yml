@@ -3,7 +3,7 @@ driver:
   name: default
 platforms:
   - name: netscaler
-    netscaler_version: ${MOLECULE_NETSCALER_VERSION:-13.1-49.15}
+    netscaler_version: ${MOLECULE_NETSCALER_VERSION:-13.1-62.23}
     http_port: 33080
     groups:
       - subjects
